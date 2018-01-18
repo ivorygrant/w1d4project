@@ -1,5 +1,5 @@
 require_relative "board"
-
+require "byebug"
 class SudokuGame
   def self.from_file(filename)
     board = Board.from_file(filename)
@@ -80,3 +80,4 @@ end
 
 
 game = SudokuGame.from_file("puzzles/sudoku1.txt")
+game.run
