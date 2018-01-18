@@ -1,4 +1,5 @@
 require_relative "tile"
+require 'byebug'
 
 class Board
   def self.empty_grid
@@ -59,7 +60,7 @@ class Board
 
   def solved_set?(tiles)
     nums = tiles.map(&:value)
-    nums.sort == (1..9).to_a
+    nums.sort == (1..8).to_a
   end
 
   def square(idx)
@@ -77,7 +78,7 @@ class Board
   end
 
   def squares
-    (0..8).to_a.map { |i| square(i) }
+    (0..9).to_a.map { |i| square(i) }
   end
 
   private
