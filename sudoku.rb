@@ -4,6 +4,7 @@ require_relative "board"
 # On the job, it is your job to figure out how the methods work and then name them better.
 # Do this now.
 
+
 class SudokuGame
   def self.from_file(filename)
     board = Board.from_file(filename)
@@ -14,14 +15,15 @@ class SudokuGame
     @board = board
   end
 
-  def retrieve_pos_from_ui
+  def retrieve_pos
     p = nil
-    until p && legal_illegibility_of_p?(p)
+    board.render
+    until p && legal_pos?(p)
       puts "Please enter a position on the board (e.g., '3,4')"
       print "> "
 
       begin
-        p = parse_inanity(gets.chomp)
+        p = to_int(gets.chomp)
       rescue
         puts "Invalid position entered (did you use a comma?)"
         puts ""
@@ -32,48 +34,48 @@ class SudokuGame
     p
   end
 
-  def retrieve_value_from_ui
+  def retrieve_value
     v = nil
-    until v && legal_illegibility_of_v?(v)
+    until v && legal_v?(v)
       puts "Please enter a value between 1 and 9 (0 to clear the tile)"
       print "> "
-      v = parse_insanity(gets.chomp)
+      v = to_i(gets.chomp)
     end
     v
   end
 
-  def parse_inanity(string)
+  def to_int(string)
     string.split(",").map { |char| Integer(char) }
   end
 
-  def parse_insanity(string)
+  def to_i(string)
     Integer(string)
   end
 
-  def process_parameters
-    pos_to_val(retrieve_pos_from_ui, retrieve_value_from_ui)
+  def pos_val
+    pos_to_val(retrieve_pos, retrieve_value)
   end
 
   def pos_to_val(p, v)
     board[p] = v
   end
 
-  def commence_proceedings
-    process_parameters until board_process_terminates?
+  def run
+    pos_val until quit?
     puts "Congratulations, you win!"
   end
 
-  def board_process_terminates?
-    board.terminate?
+  def quit?
+    board.quit?
   end
 
-  def legal_illegibility_of_p?(pos)
+  def legal_pos?(pos)
     pos.is_a?(Array) &&
       pos.length == 2 &&
       pos.all? { |x| x.between?(0, board.size - 1) }
   end
 
-  def legal_illegibility_of_v?(val)
+  def legal_v?(val)
     val.is_a?(Integer) &&
       val.between?(0, 9)
   end
@@ -84,4 +86,4 @@ end
 
 
 game = SudokuGame.from_file("puzzles/sudoku1.txt")
-game.commence_proceedings
+game.run
